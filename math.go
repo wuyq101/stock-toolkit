@@ -1,5 +1,7 @@
 package stk
 
+import "math"
+
 // Divide 列运算，两列相除
 func Divide(x, y []float64) []float64 {
 	return forEach(x, y, func(i int) float64 {
@@ -15,11 +17,47 @@ func Sub(x, y []float64) []float64 {
 	return forEach(x, y, func(i int) float64 { return x[i] - y[i] })
 }
 
+// Add 列运算，两列相加
+func Add(x, y []float64) []float64 {
+	return forEach(x, y, func(i int) float64 { return x[i] + y[i] })
+}
+
 func forEach(x, y []float64, fn func(int) float64) []float64 {
 	result := make([]float64, len(x))
 	for i := 0; i < len(x); i++ {
 		result[i] = fn(i)
 	}
 	return result
+}
 
+// ColumnSum 列求和
+func ColumnSum(x []float64) float64 {
+	r := 0.0
+	for _, num := range x {
+		r += num
+	}
+	return r
+}
+
+// Mean 求平均值
+func Mean(x []float64) float64 {
+	if len(x) == 0 {
+		return 0
+	}
+	sum := ColumnSum(x)
+	return sum / float64(len(x))
+}
+
+// Std 求标准差
+func Std(x []float64) float64 {
+	if len(x) == 0 {
+		return 0
+	}
+	mean := Mean(x)
+	size := len(x)
+	var sd float64
+	for _, num := range x {
+		sd += math.Pow(num-mean, 2)
+	}
+	return math.Sqrt(sd / float64(size))
 }
