@@ -43,21 +43,7 @@ func FloatEqual(a, b float64, tolerance float64) bool {
 // BIAS=(收盘价-收盘价的N日简单平均)/收盘价的N日简单平均*100
 func BIAS(data []float64, n int) []float64 {
 	ma := MA(data, n)
-	result := make([]float64, len(data))
-	for i := 0; i < len(data); i++ {
-		if i < n-1 {
-			result[i] = 0.0
-			continue
-		}
-		result[i] = (data[i] - ma[i]) / ma[i]
-	}
-	return result
-}
-
-// BIASHIGH 取最高价
-func BIASHIGH(high, close []float64, n int) []float64 {
-	//TODO
-	return nil
+	return Divide(Sub(data, ma), ma)
 }
 
 // BBI 多空指数（Bull and Bear Index）
@@ -66,7 +52,8 @@ func BBI(close []float64) []float64 {
 	em5 := EMA(close, 5)
 	em10 := EMA(close, 10)
 	em20 := EMA(close, 20)
-	return Add(Add(em5, em10), em20)
+	sum := Add(Add(em5, em10), em20)
+	return Multiply(sum, 1.0/3.0)
 }
 
 // UPR 股价压力线，对股价有压制作用
@@ -74,7 +61,7 @@ func BBI(close []float64) []float64 {
 // 传入参数每一列为不同交易日的收盘价，每一行表示不同交易日
 // 输出为支撑线列
 func UPR(close []float64, n int) []float64 {
-
+	return nil
 }
 
 // DWN 股价支撑线，对股价有支撑作用
@@ -82,5 +69,5 @@ func UPR(close []float64, n int) []float64 {
 // 传入参数每一列为不同交易日的收盘价，每一行表示不同交易日
 // 输出为支撑线列
 func DWN(close []float64, n int) []float64 {
-
+	return nil
 }
