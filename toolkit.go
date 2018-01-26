@@ -4,8 +4,20 @@ package stk
 // 移动平均线，Moving Average，简称MA，MA是用统计分析的方法，将一定时期内的证券价格（指数）加以平均，
 // 并把不同时间的平均值连接起来，形成一根MA，用以观察证券价格变动趋势的一种技术指标。
 func MA(data []float64, n int) []float64 {
-	//TODO
-	return nil
+	result := make([]float64, n)
+	sum := 0.0
+	for i := 0; i < n; i++ {
+		sum += data[i]
+		if i >= n {
+			sum -= data[i-n]
+		}
+		if i < n-1 {
+			result[i] = 0.0
+			continue
+		}
+		result[i] = sum / float64(n)
+	}
+	return result
 }
 
 // EMA （Exponential Moving Average）是指数平均数指标。
