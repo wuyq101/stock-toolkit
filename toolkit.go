@@ -38,3 +38,18 @@ func EMA(data []float64, n int) []float64 {
 func FloatEqual(a, b float64, tolerance float64) bool {
 	return math.Abs(a-b) < tolerance
 }
+
+// BIAS 乖离率，是用百分比来表示价格与MA间的偏离程度(差距率)。
+// BIAS=(收盘价-收盘价的N日简单平均)/收盘价的N日简单平均*100
+func BIAS(data []float64, n int) []float64 {
+	ma := MA(data, n)
+	result := make([]float64, len(data))
+	for i := 0; i < len(data); i++ {
+		if i < n-1 {
+			result[i] = 0.0
+			continue
+		}
+		result[i] = (data[i] - ma[i]) / ma[i]
+	}
+	return result
+}
