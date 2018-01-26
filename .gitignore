@@ -15,3 +15,4 @@
 
 # Vim
 *.swp
+.idea

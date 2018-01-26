@@ -4,7 +4,7 @@ import "math"
 
 // Divide 列运算，两列相除
 func Divide(x, y []float64) []float64 {
-	return forEach(x, y, func(i int) float64 {
+	return forEach(len(x), func(i int) float64 {
 		if y[i] == 0.0 {
 			return 0.0
 		}
@@ -14,22 +14,22 @@ func Divide(x, y []float64) []float64 {
 
 // Sub 列运算，两列相减
 func Sub(x, y []float64) []float64 {
-	return forEach(x, y, func(i int) float64 { return x[i] - y[i] })
+	return forEach(len(x), func(i int) float64 { return x[i] - y[i] })
 }
 
 // Add 列运算，两列相加
 func Add(x, y []float64) []float64 {
-	return forEach(x, y, func(i int) float64 { return x[i] + y[i] })
+	return forEach(len(x), func(i int) float64 { return x[i] + y[i] })
 }
 
 // Multiply 列乘以一个系数
 func Multiply(x []float64, a float64) []float64 {
-	return forEach(x, nil, func(i int) float64 { return x[i] * a })
+	return forEach(len(x), func(i int) float64 { return x[i] * a })
 }
 
-func forEach(x, y []float64, fn func(int) float64) []float64 {
-	result := make([]float64, len(x))
-	for i := 0; i < len(x); i++ {
+func forEach(length int, fn func(int) float64) []float64 {
+	result := make([]float64, length)
+	for i := 0; i < length; i++ {
 		result[i] = fn(i)
 	}
 	return result

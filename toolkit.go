@@ -83,3 +83,18 @@ func UPR(close []float64) []float64 {
 func DWN(close []float64, n int) []float64 {
 	return nil
 }
+
+// HHV 输出data在范围n天内的最大值
+func HHV(data []float64, n int) []float64 {
+	result := make([]float64, len(data))
+	for i := 0; i < len(data); i++ {
+		max := data[i]
+		for k := i - 1; k > i - n && k >= 0; k-- {
+			if data[k] > max {
+				max = data[k]
+			}
+		}
+		result[i] = max
+	}
+	return result
+}
