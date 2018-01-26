@@ -57,11 +57,23 @@ func BBI(close []float64) []float64 {
 }
 
 // UPR 股价压力线，对股价有压制作用
-// 一般情况下可以取10天的收盘价进行计算
+// 一般情况下可以取20天的收盘价进行计算，因此close的长度至少为20
 // 传入参数每一列为不同交易日的收盘价，每一行表示不同交易日
 // 输出为支撑线列
-func UPR(close []float64, n int) []float64 {
-	return nil
+func UPR(close []float64) []float64 {
+	bbi := BBI(close)
+	result := make([]float64, 0, len(bbi))
+	// 针对0-9位置的数据
+	for i, b := range bbi {
+		if i < 9 {
+			result = append(result, 0)
+			continue
+		}
+		// 压力位
+		upr := b - 3*Mean(bbi[i-9:i+1])
+		result = append(result, upr)
+	}
+	return result
 }
 
 // DWN 股价支撑线，对股价有支撑作用
