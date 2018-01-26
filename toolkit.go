@@ -53,3 +53,9 @@ func BIAS(data []float64, n int) []float64 {
 	}
 	return result
 }
+
+// BIASHIGH 取最高价
+func BIASHIGH(high, close []float64, n int) []float64 {
+	//TODO
+	return nil
+}
