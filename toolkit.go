@@ -45,3 +45,29 @@ func BIAS(data []float64, n int) []float64 {
 	ma := MA(data, n)
 	return Divide(Sub(data, ma), ma)
 }
+
+// BBI 多空指数（Bull and Bear Index）
+// 是一种将不同日数移动平均线加权平均之后的综合指标。属于常用技术指标类因子。
+func BBI(close []float64) []float64 {
+	em5 := EMA(close, 5)
+	em10 := EMA(close, 10)
+	em20 := EMA(close, 20)
+	sum := Add(Add(em5, em10), em20)
+	return Multiply(sum, 1.0/3.0)
+}
+
+// UPR 股价压力线，对股价有压制作用
+// 一般情况下可以取10天的收盘价进行计算
+// 传入参数每一列为不同交易日的收盘价，每一行表示不同交易日
+// 输出为支撑线列
+func UPR(close []float64, n int) []float64 {
+	return nil
+}
+
+// DWN 股价支撑线，对股价有支撑作用
+// 一般情况下可以取10天的收盘价会进行计算
+// 传入参数每一列为不同交易日的收盘价，每一行表示不同交易日
+// 输出为支撑线列
+func DWN(close []float64, n int) []float64 {
+	return nil
+}
