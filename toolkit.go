@@ -1,6 +1,8 @@
 package stk
 
-import "math"
+import (
+	"math"
+)
 
 // MA 计算MA的工具函数
 // 移动平均线，Moving Average，简称MA，MA是用统计分析的方法，将一定时期内的证券价格（指数）加以平均，
@@ -48,38 +50,45 @@ func BIAS(data []float64, n int) []float64 {
 
 // BBI 多空指数（Bull and Bear Index）
 // 是一种将不同日数移动平均线加权平均之后的综合指标。属于常用技术指标类因子。
-func BBI(close []float64) []float64 {
-	em5 := EMA(close, 5)
-	em10 := EMA(close, 10)
-	em20 := EMA(close, 20)
-	sum := Add(Add(em5, em10), em20)
-	return Multiply(sum, 1.0/3.0)
+// 默认传入为5日、10日和20日
+func BBI(close []float64, n ...int) []float64 {
+	result := make([]float64, len(close))
+	for _, v := range n {
+		result = Add(result, EMA(close, v))
+	}
+	return Multiply(result, 1.0/float64(len(n)))
 }
 
 // UPR 股价压力线，对股价有压制作用
 // 一般情况下可以取20天的收盘价进行计算，因此close的长度至少为20
 // 传入参数每一列为不同交易日的收盘价，每一行表示不同交易日
 // 输出为支撑线列
-func UPR(close []float64) []float64 {
-	bbi := BBI(close)
-	result := make([]float64, 0, len(bbi))
-	// 针对0-9位置的数据
-	for i, b := range bbi {
-		if i < 9 {
-			result = append(result, 0)
-			continue
-		}
-		// 压力位
-		upr := b - 3*Mean(bbi[i-9:i+1])
-		result = append(result, upr)
-	}
-	return result
+// n 表示向前查找的bbi天数
+// m 表示彼标准差常量参数
+// 推荐 n=10，m=3.0
+func UPR(close []float64, n int, m float64) []float64 {
+	bbi := BBI(close, 5, 10, 20)
+	return Add(bbi, Multiply(STD(bbi, n), m))
 }
 
 // DWN 股价支撑线，对股价有支撑作用
 // 一般情况下可以取10天的收盘价会进行计算
 // 传入参数每一列为不同交易日的收盘价，每一行表示不同交易日
 // 输出为支撑线列
-func DWN(close []float64, n int) []float64 {
-	return nil
+// n 表示向前查找的bbi天数
+// m 表示彼标准差常量参数
+// 推荐 n=10，m=-3.0
+func DWN(close []float64, n int, m float64) []float64 {
+	bbi := BBI(close)
+	return Add(bbi, Multiply(STD(bbi, n), m))
+}
+
+// STD 求标准差
+func STD(x []float64, n int) []float64 {
+	return forEach(x, nil, func(i int) float64 {
+		if i < n-1 {
+			return 0.0
+		}
+		return Std(x[i-n+1 : i+1])
+	})
 }
