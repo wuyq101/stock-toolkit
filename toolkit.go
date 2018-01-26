@@ -25,8 +25,13 @@ func MA(data []float64, n int) []float64 {
 // EMA （Exponential Moving Average）是指数平均数指标。
 // 也叫EXPMA指标，它也是一种趋向类指标，指数平均数指标是以指数式递减加权的移动平均。
 func EMA(data []float64, n int) []float64 {
-	//TODO
-	return nil
+	result := make([]float64, len(data))
+	alpha := 2.0 / float64(n+1)
+	result[0] = data[0]
+	for i := 1; i < len(data); i++ {
+		result[i] = alpha*(data[i]-result[i-1]) + result[i-1]
+	}
+	return result
 }
 
 // FloatEqual 浮点数比较，股票价格等一般精确到小数点之后两位，所以调用的时候，tolerance=0.01
