@@ -34,6 +34,18 @@ func EMA(data []float64, n int) []float64 {
 	return result
 }
 
+// MACD 称为指数平滑移动平均线，是从双指数移动平均线发展而来的，由快的指数移动平均线（EMA12）减去慢的指数移动平均线（EMA26）得到快线DIF，
+// 再用2×（快线DIF-DIF的9日加权移动均线DEA）得到MACD柱。MACD的意义和双移动平均线基本相同，即由快、慢均线的离散、聚合表征当前的多空状态和股价可能的发展变化趋势，
+// 但阅读起来更方便。当MACD从负数转向正数，是买的信号。当MACD从正数转向负数，是卖的信号。
+// 当MACD以大角度变化，表示快的移动平均线和慢的移动平均线的差距非常迅速的拉开，代表了一个市场大趋势的转变。
+func MACD(data []float64, ema1, ema2, dif int) []float64 {
+	e1 := EMA(data, ema1)
+	e2 := EMA(data, ema2)
+	d := Sub(e1, e2)
+	dea := EMA(d, dif)
+	return Multiply(Sub(d, dea), 2.0)
+}
+
 // FloatEqual 浮点数比较，股票价格等一般精确到小数点之后两位，所以调用的时候，tolerance=0.01
 func FloatEqual(a, b float64, tolerance float64) bool {
 	return math.Abs(a-b) < tolerance
