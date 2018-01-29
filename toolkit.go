@@ -97,7 +97,7 @@ func DWN(close []float64, n int, m float64) []float64 {
 
 // STD 求标准差
 func STD(x []float64, n int) []float64 {
-	return forEach(x, nil, func(i int) float64 {
+	return forEach(n, func(i int) float64 {
 		if i < n-1 {
 			return 0.0
 		}
@@ -110,7 +110,7 @@ func HHV(data []float64, n int) []float64 {
 	result := make([]float64, len(data))
 	for i := 0; i < len(data); i++ {
 		max := data[i]
-		for k := i - 1; k > i - n && k >= 0; k-- {
+		for k := i - 1; k > i-n && k >= 0; k-- {
 			if data[k] > max {
 				max = data[k]
 			}
